@@ -1,0 +1,22 @@
+GIT
+  remote: https://github.com/mharris717/rfuse
+  revision: 53e11c6c5fe1a46034998c68122289673ba503ee
+  branch: osx_bumped_version
+  specs:
+    rfuse (1.1.2)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    rfusefs (1.0.3)
+      rfuse (~> 1.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  rfuse!
+  rfusefs
+
+BUNDLED WITH
+   1.11.2
