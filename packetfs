@@ -21,10 +21,11 @@ class PacketFS < FuseFS::FuseDir
 
 end
 
-# Usage: #{$0} mountpoint [mount_options]
-# FuseFS.main() { |options| HelloDir.new }
-
 root = PacketFS.new
 FuseFS.set_root(root)
-FuseFS.mount_under("/tmp/packet", *ARGV)
+
+mount_dir = ARGV.shift
+FuseFS.mount_under(mount_dir, *ARGV)
+
+Process.daemon
 FuseFS.run
