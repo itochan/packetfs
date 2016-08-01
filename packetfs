@@ -3,6 +3,7 @@
 ENV["BUNDLE_GEMFILE"] = File.expand_path("../Gemfile", __FILE__)
 require 'bundler/setup'
 
+require 'optparse'
 require 'rfusefs'
 
 class PacketFS < FuseFS::FuseDir
@@ -27,5 +28,8 @@ FuseFS.set_root(root)
 mount_dir = ARGV.shift
 FuseFS.mount_under(mount_dir, *ARGV)
 
-Process.daemon
+params = ARGV.getopts('d')
+unless params['d']
+    Process.daemon
+end
 FuseFS.run
