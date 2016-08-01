@@ -8,24 +8,34 @@ require 'rfusefs'
 
 class PacketFS < FuseFS::FuseDir
 
+  def initialize(storage)
+    @storage = storage
+  end
+
   def contents(path)
-    ['hello.txt']
+    puts @storage + path
+    Dir::entries(@storage + path)
   end
 
   def file?(path)
-    path == '/hello.txt'
+    File.file?(@storage + path)
+  end
+
+  def directory?(path)
+    File.directory?(@storage + path)
   end
 
   def read_file(path)
-    "Hello, World!\n"
+    File.read(@storage + path)
   end
 
 end
 
-root = PacketFS.new
-FuseFS.set_root(root)
-
 mount_dir = ARGV.shift
+storage = ARGV.shift
+
+root = PacketFS.new(storage)
+FuseFS.set_root(root)
 FuseFS.mount_under(mount_dir, *ARGV)
 
 params = ARGV.getopts('d')
