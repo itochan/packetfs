@@ -12,21 +12,74 @@ class PacketFS < FuseFS::FuseDir
     @storage = storage
   end
 
-  def contents(path)
-    puts @storage + path
-    Dir::entries(@storage + path)
+  def directory?(path)
+    File.directory?(@storage + path)
   end
 
   def file?(path)
     File.file?(@storage + path)
   end
 
-  def directory?(path)
-    File.directory?(@storage + path)
+  def contents(path)
+    puts @storage + path
+    Dir.entries(@storage + path)
+  end
+
+  def executable?(path)
+    File.executable?(@storage + path)
+  end
+
+  def times(path)
+    file = @storage + path
+    [File.atime(file), File.mtime(file), File.ctime(file)]
   end
 
   def read_file(path)
     File.read(@storage + path)
+  end
+
+  def can_write?(path)
+    if File.exist?(path)
+      File.writable?(@storage + path)
+    else
+      File.writable?(File.dirname(@storage + path))
+    end
+  end
+
+  def write_to(path, str)
+    File.write(@storage + path, str)
+  end
+
+  def can_delete?(path)
+    File.writable?(@storage + path)
+  end
+
+  def delete(path)
+    File.delete(@storage + path)
+  end
+
+  def can_mkdir?(path)
+    if File.exist?(path)
+      File.writable?(@storage + path)
+    else
+      File.writable?(File.dirname(@storage + path))
+    end
+  end
+
+  def mkdir(path)
+    Dir.mkdir(@storage + path)
+  end
+
+  def can_rmdir?(path)
+    File.writable?(@storage + path)
+  end
+
+  def rmdir(path)
+    Dir.rmdir(@storage + path)
+  end
+
+  def touch(path, modtime)
+    FileUtils.touch(@storage + path, mtime: Time.now)
   end
 
 end
